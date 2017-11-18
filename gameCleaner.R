@@ -1,9 +1,8 @@
 library(lubridate)
 library(dplyr)
 
-games <- tbl_df(read.csv("gameData.csv", sep = "~", colClasses = c("character", "character", "character", "character", "character", "character", "character", "character", "character")))
+games <- tbl_df(read.csv("Data/gameData.csv", sep = "~", colClasses = c("character", "character", "character", "character", "character", "character", "character", "character", "character")))
 
-View(games)
 #Data Cleaning for games
 #Remove rows without id
 games <- games %>% filter(!is.na(as.integer(id)))
@@ -24,3 +23,7 @@ games$discountCost <- as.integer(games$discountCost)
 dates <- read.table(text = gsub(",", "", games$releaseDate), sep = " ", colClasses = "character")
 dates <- with(dates, paste(V1, V2, V3, sep="-"))
 games$releaseDate <- dates
+#Clean the description of games
+games$desc <- gsub("\t", "", games$desc)
+
+write.table(games, file="DataCleaned/cleanedGames.csv", sep="~", row.names=FALSE, na="", col.names=c(id,url,title,releasDate,desc,developers,discount,discountCost,realCost,reviewUrl))
