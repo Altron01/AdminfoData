@@ -26,4 +26,4 @@ games$releaseDate <- dates
 #Clean the description of games
 games$desc <- gsub("\t", "", games$desc)
 
-write.table(games, file="DataCleaned/cleanedGames.csv", sep="~", row.names=FALSE, na="", col.names=c(id,url,title,releasDate,desc,developers,discount,discountCost,realCost,reviewUrl))
+write.table(games, file="DataCleaned/cleanedGames.csv", sep="~", row.names=FALSE, na="", col.names=c("id","url","title","releasDate","desc","developers","discount","discountCost","realCost","reviewUrl"), quote=FALSE)

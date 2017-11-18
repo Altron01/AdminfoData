@@ -15,7 +15,7 @@ dateGenerator <- function(){
   reviews <- mutate(reviews, postDate = as.Date(with(reviews, paste(day, month, year, sep = "-")), "%d-%m-%Y"))
   reviews <- select(reviews, -day, -month, -year)
 }
-reviews <- tbl_df(read.csv("reviews.csv", sep = "~", colClasses = c("character", "character", "character", "character", "character", "character", "character", "character"), comment.char = "", quote=""))
+reviews <- tbl_df(read.csv("Data/reviews.csv", sep = "~", colClasses = c("character", "character", "character", "character", "character", "character", "character", "character"), comment.char = "", quote=""))
 
 #id cleaned as integer
 #rows without id tend to have error in others elements so they cant be cleaned
@@ -31,7 +31,7 @@ reviews$hoursPlayed <-as.numeric(getData(reviews$hoursPlayed, "@@@@@@@@@@", " hr
 reviews$postDate <- getData(reviews$postDate, "Posted: ", "@@@@@@@@@@")
 for (i in 1:length(reviews$postDate)){
   if(length(unlist(strsplit(reviews$postDate[i], " "))) > 3){
-    reviews$postDate[i] <- NULL
+    reviews$postDate[i] <- ""
   }
 }
 #Clear duplicates
@@ -39,7 +39,5 @@ reviews <- reviews[!duplicated(reviews[, c("reviewText")]), ]
 #Clear unusable rows
 reviews <- reviews[-grep("Posted: ", reviews$reviewText),]
 
-#Random Stuff
-View(reviews[grep("Posted: ", reviews$reviewText), ])
-View(reviews %>% filter(str_detect(reviewText, "Posted:")))
-View(reviews)
+
+write.table(reviews, file="DataCleaned/cleanedReviews.csv", sep="~", row.names=FALSE, col.names=c("id","decision","helpfulReview","funnyReview","hoursPlayed","postDate","reviewText","userCountry"), quote=FALSE)
